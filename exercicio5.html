@@ -25,20 +25,34 @@
         for the JavaScript code in this page.
 */
 
-    var MaxHeight, MaxWidth, YPos, XPos, interval1, interval2, interval3, interval4, moveTo;
+    var MaxHeight, MaxWidth, YPos, XPos, interval1, interval2, interval3, interval4, moveTo, intervalo, s = 30, roma = 0, pontos = 0;
+
 
 function init(){
 	YPos = -500;
 	XPos = -500;
 	toMove = document.getElementById("scroller");
 	toMove.style.backgroundPosition = XPos + "px "+YPos + "px";
+	alert("Tens 30s para encontrar entrada p Roma!")
+	cronometro();
 }
+
 function move(){
 	if ((YPos >= 0)||(YPos <= -700)||(XPos >= 0)||(XPos >= MaxHeight)) {
 	    stop();
 	}
-	if ((YPos<=-275)&&(YPos>=-328)&&(XPos<=-342)&&(XPos>=-405)) {
-		toMove.style.background = "url('roma.jpg')"};
+	verificaRoma();
+	if (roma == 1){
+		stopCronometro();
+		marcarpontos(10);
+		
+	}
+	
+	
+		//toMove.style.background = "url('roma.jpg')";
+		
+	
+	
 	toMove = document.getElementById("scroller");
 	toMove.style.backgroundPosition = XPos + "px "+YPos + "px";
 	document.getElementById("pos").innerHTML=toMove.style.backgroundPosition;
@@ -95,6 +109,7 @@ function stop() {
 	clearInterval(interval3);
 	clearInterval(interval4);
 };
+
 window.onload =init;
 
 function Key(e) {
@@ -103,6 +118,46 @@ function Key(e) {
     if (e.keyCode===39) moveD();
     if (e.keyCode===40) moveB();
 }
+
+// novas funcoes
+
+function cronometro(){
+	intervalo = window.setInterval(function() {
+		if(s == 0 && roma == 0){ // se nao entrou em roma e o tempo acabou : Perde
+			s = 30; // conta 1 minuto
+			alert("Game over");
+			init();
+		}
+		document.getElementById("tempo").innerHTML = "Tempo: "+ s + "s";	
+		s--;
+	},1000);
+
+}
+
+function stopCronometro(){
+		s = 0; // conta 1 minuto
+		document.getElementById("tempo").style.display = 'none';
+}
+
+// marcar pontos
+
+function marcarpontos(p) {
+	if(pontos == 0){
+	pontos = pontos+p;
+	document.getElementById("score").innerHTML = "Pontos: "+pontos;
+	}
+}
+
+// verifica roma
+
+function verificaRoma(){
+	
+	if((YPos<=-275)&&(YPos>=-328)&&(XPos<=-342)&&(XPos>=-405)){
+		roma = 1;
+		toMove.style.background = "url('roma.jpg')";
+	}
+}
+
 </script>
 
 <style>
@@ -148,5 +203,7 @@ function Key(e) {
 <button onclick="moveE()">Esquerda</button> 
 <button onclick="stop()">Parar</button> 
 <div id="pos"></div>
+<div id="score">0</div>
+<div id="tempo">00s</div>
 </body>
 </html>
